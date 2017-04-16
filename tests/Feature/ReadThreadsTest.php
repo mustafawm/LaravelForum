@@ -3,18 +3,21 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class ThreadsTest extends TestCase
+
+class ReadThreadsTest extends TestCase
 {
+    use DatabaseMigrations;
+
     public function setUp()
     {
         parent::setUp();
 
-        $this->thread = factory('App\Thread')->create();
+        $this->thread = create('App\Thread');
     }
 
-    use DatabaseMigrations;
     /** * @test */
     public function a_user_can_view_all_threads()
     {
@@ -33,8 +36,8 @@ class ThreadsTest extends TestCase
     /** * @test */
     public function a_user_can_view_replies_on_thread()
     {
-        $reply = factory('App\Reply')
-            ->create(['thread_id' => $this->thread->id]);
+        $reply = create('App\Reply',['thread_id' => $this->thread->id]);
+
 
         $this->get($this->thread->path())
             ->assertSee($reply->body);
